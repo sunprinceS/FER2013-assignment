@@ -8,9 +8,23 @@ from keras.layers import Input,Dense,Dropout,Flatten,Activation
 from keras.layers import Convolution2D,MaxPooling2D
 from keras.layers.advanced_activations import PReLU
 from keras.layers.convolutional import ZeroPadding2D,AveragePooling2D
+from keras.callbacks import Callback
 from keras.optimizers import SGD, Adadelta, Adam
 from termcolor import colored, cprint
 nb_class = 7
+
+class History(Callback):
+    def on_train_begin(self,logs={}):
+        self.tr_losses=[]
+        self.val_losses=[]
+        self.tr_accs=[]
+        self.val_accs=[]
+
+    def on_epoch_end(self,epoch,logs={}):
+        self.tr_losses.append(logs.get('loss'))
+        self.val_losses.append(logs.get('val_loss'))
+        self.tr_accs.append(logs.get('acc'))
+        self.val_accs.append(logs.get('val_acc'))
 
 def build_model(mode):
     
@@ -41,9 +55,6 @@ def build_model(mode):
         model.add(Activation('softmax'))
         opt = Adam(lr=0.01,beta_1=0.9,beta_2=0.999,epsilon=1e-08,decay=0.0)
         # opt = Adadelta(lr=0.1, rho=0.95, epsilon=1e-08)
-        model.compile(loss='categorical_crossentropy',
-                      optimizer=opt,
-                      metrics=['accuracy'])
     elif mode == 'NTUEE':
         model.add(Convolution2D(64,5,5,border_mode='valid', input_shape=(48,48,1)))
         model.add(PReLU(init='zero',weights=None))
@@ -73,9 +84,10 @@ def build_model(mode):
         model.add(Activation('softmax'))
 
         opt= Adadelta(lr=0.1, rho=0.95, epsilon=1e-08)
-        model.compile(loss='categorical_crossentropy',
-                      optimizer=opt,
-                      metrics=['accuracy'])
+
+    model.compile(loss='categorical_crossentropy',
+                  optimizer=opt,
+                  metrics=['accuracy'])
     model.summary()
     return model
 

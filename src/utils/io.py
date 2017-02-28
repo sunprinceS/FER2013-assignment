@@ -35,6 +35,19 @@ def read_dataset(mode='train'):
 
     return feats,labels,line_ids
 
+def dump_history(store_path,logs):
+    with open(os.path.join(store_path,'train_loss'),'w') as f:
+        for loss in logs.tr_losses:
+            f.write('{}\n'.format(loss))
+    with open(os.path.join(store_path,'train_accuracy'),'w') as f:
+        for acc in logs.tr_accs:
+            f.write('{}\n'.format(acc))
+    with open(os.path.join(store_path,'valid_loss'),'w') as f:
+        for loss in logs.val_losses:
+            f.write('{}\n'.format(loss))
+    with open(os.path.join(store_path,'valid_accuracy'),'w') as f:
+        for acc in logs.val_accs:
+            f.write('{}\n'.format(acc))
 
 if __name__ == "__main__":
     feats,labels,line_ids = read_dataset('toy')

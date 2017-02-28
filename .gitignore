@@ -1,1 +1,8 @@
+model/
+*.png
+*.jpg
 *.pdf
+*.pyc
+*.swp
+*.txt
+*.csv

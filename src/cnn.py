@@ -1,7 +1,7 @@
-from keras.models import Model
+from keras.models import Model, load_model
 from keras.layers import Input, Dense, Dropout, Flatten
 from keras.layers import Convolution2D, MaxPooling2D
-from keras.optimizers import SGD #, Adam
+from keras.optimizers import SGD, Adam, Adadelta
 
 def build_model():
     input_img = Input(shape=(48, 48, 1))
@@ -22,16 +22,11 @@ def build_model():
     predict = Dense(7, activation='softmax')(layer3)
 
     model = Model(input=input_img, output=predict)
+    # opt = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
+    # opt = Adam(lr=0.001)
+    opt = Adadelta(lr=0.1)
+    model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
     return model
-
-def compile_model(model):
-    sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-    # adam = Adam()
-    model.compile(loss='categorical_crossentropy', optimizer=sgd)
-
-def train_on_batch(model, X_batch, Y_batch, batch_size):
-    model.train_on_batch(X_batch, Y_batch)
-
 
 
 # model = Sequential()

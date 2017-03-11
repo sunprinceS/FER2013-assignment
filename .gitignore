@@ -1,5 +1,6 @@
 *.pdf
 *.pyc
 data/
+data_bk/
 *.swp
 exp/

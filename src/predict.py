@@ -27,8 +27,7 @@ def main():
     emotion_classifier.summary()
     te_feats,te_labels,_ = read_dataset('privateTest')
     acc = emotion_classifier.evaluate(te_feats,te_labels,batch_size=args.batch)[1]
-    print(colored('Accuracy on privateTest is {:.6f}'.format(acc),'yellow',attrs=['bold']))
-    # print(emotion_classifier.predict(te_feats,batch_size=args.batch))
+    print(colored('\nAccuracy on privateTest is {:.6f}'.format(acc),'yellow',attrs=['bold']))
 
 
 

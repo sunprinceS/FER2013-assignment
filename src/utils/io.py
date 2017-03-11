@@ -9,11 +9,28 @@ from keras.utils.np_utils import to_categorical
 base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 data_dir = os.path.join(base_dir,'data')
 
+def get_labels(mode='privateTest'):
+    """
+    Return labels: int32 np array
+    """
+    category=["Angry","Disgust","Fear","Happy","Sad","Surprise","Neutral"]
+    label_count = [0]*7
+    labels = list()
+    with open(os.path.join(data_dir,'{}.csv'.format(mode))) as file:
+        for line in file:
+            label,_ = feat=line.split(',')
+            labels.append(int(label))
+            label_count[int(label)] += 1
+    labels = np.asarray(labels)
+    for name,count in zip(category,label_count):
+        print("{}: {}".format(name,count))
+    return labels,label_count,category
+
 def read_dataset(mode='train'):
     """
     Return:
         # features: (int. list) list
-        # labels: int. list
+        # labels: int32 2D array
         data_ids: int. list
     """
     # num_data = 0

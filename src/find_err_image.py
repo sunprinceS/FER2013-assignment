@@ -25,8 +25,10 @@ def main():
     model_path = os.path.join(exp_dir,store_path,'model.h5')
 
     emotion_classifier = load_model(model_path)
+    np.set_printoptions(precision=2)
     te_feats,_,_ = read_dataset('privateTest')
     predictions = emotion_classifier.predict_classes(te_feats,batch_size=args.batch)
+    probs = emotion_classifier.predict(te_feats,batch_size=args.batch)
     te_labels,label_counts,categories = get_labels('privateTest')
     conf_mat = confusion_matrix(te_labels,predictions)
     np.save(os.path.join(exp_dir,store_path,'conf_mat'),conf_mat)
@@ -38,7 +40,11 @@ def main():
     with open(os.path.join(exp_dir,store_path,'err_id'),'w') as f:
         for idx,(ans,pred) in enumerate(zip(te_labels,predictions)):
             if ans != pred:
-                f.write('idx:{} ans:{} pred:{}\n'.format(idx,ans,pred))
+                f.write('\nidx:{} ans:{} pred:{}\n'.format(idx,categories[ans],categories[pred]))
+                prob = probs[idx]
+                order = prob.argsort()[::-1]
+                f.write(' > '.join([categories[i] for i in order]))
+
 
 if __name__ == "__main__":
     main()

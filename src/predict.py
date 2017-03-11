@@ -9,6 +9,12 @@ from utils import *
 
 base_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 exp_dir = os.path.join(base_dir,'exp')
+def acc_2(probs,ans):
+    correct = 0
+    for a,p in zip(ans,probs):
+        if a in p.argsort()[-2:][::-1]:
+            correct += 1
+    return correct/len(ans)
 
 def main():
     parser = argparse.ArgumentParser(prog='predict.py',
@@ -26,8 +32,12 @@ def main():
     emotion_classifier = load_model(model_path)
     emotion_classifier.summary()
     te_feats,te_labels,_ = read_dataset('privateTest')
+    ans,_,_ = get_labels('privateTest')
+    probs = emotion_classifier.predict(te_feats,batch_size=args.batch)
     acc = emotion_classifier.evaluate(te_feats,te_labels,batch_size=args.batch)[1]
     print(colored('\nAccuracy on privateTest is {:.6f}'.format(acc),'yellow',attrs=['bold']))
+    acc2 = acc_2(probs,ans)
+    print(colored('\nAccuracy on privateTest is {:.6f}'.format(acc2),'yellow',attrs=['bold']))
 
 
 

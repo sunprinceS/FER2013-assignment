@@ -4,7 +4,7 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 from keras.models import Sequential
-from keras.layers import Input,Dense,Dropout,Flatten,Activation
+from keras.layers import Input,Dense,Dropout,Flatten,Activation,Reshape
 from keras.layers import Convolution2D,MaxPooling2D
 from keras.layers.advanced_activations import PReLU
 from keras.layers.convolutional import ZeroPadding2D,AveragePooling2D
@@ -84,10 +84,36 @@ def build_model(mode):
         model.add(Activation('softmax'))
 
         opt= Adadelta(lr=0.1, rho=0.95, epsilon=1e-08)
+    elif mode == 'DNN':
+        # model.add(Flatten())
+        model.add(Reshape((2304,),input_shape=(48,48,1)))
+        model.add(Dense(1024))
+        model.add(PReLU(init='zero',weights=None))
+        model.add(Dropout(0.2))
+        model.add(Dense(512))
+        model.add(PReLU(init='zero', weights=None))
+        model.add(Dropout(0.2))
+        model.add(Dense(512))
+        model.add(PReLU(init='zero', weights=None))
+        model.add(Dropout(0.2))
+        model.add(Dense(256))
+        model.add(PReLU(init='zero', weights=None))
+        model.add(Dropout(0.2))
+        model.add(Dense(256))
+        model.add(PReLU(init='zero', weights=None))
+        model.add(Dropout(0.2))
+        model.add(Dense(512))
+        model.add(PReLU(init='zero', weights=None))
+        model.add(Dropout(0.2))
+        model.add(Dense(2048))
+        model.add(PReLU(init='zero', weights=None))
+        model.add(Dropout(0.2))
+        model.add(Dense(nb_class))
+        model.add(Activation('softmax'))
+        opt= Adadelta(lr=0.1, rho=0.95, epsilon=1e-08)
 
     model.compile(loss='categorical_crossentropy',
                   optimizer=opt,
                   metrics=['accuracy'])
     model.summary()
     return model
-

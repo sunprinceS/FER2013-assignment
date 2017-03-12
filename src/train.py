@@ -13,7 +13,7 @@ exp_dir = os.path.join(base_dir,'exp')
 def main():
     parser = argparse.ArgumentParser(prog='train.py',
             description='FER2013 training script.')
-    parser.add_argument('--model',type=str,default='simple',choices=['simple','NTUEE'],
+    parser.add_argument('--model',type=str,default='simple',choices=['simple','NTUEE','DNN'],
             metavar='<model>')
     parser.add_argument('--epoch',type=int,metavar='<#epoch>',default=20)
     parser.add_argument('--batch',type=int,metavar='<batch_size>',default=64)

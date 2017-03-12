@@ -52,7 +52,7 @@ def plot_confusion_matrix(cm, classes,
 def main():
     parser = argparse.ArgumentParser(prog='plot_conf.py',
             description='FER2013 plotting confusion matrix.')
-    parser.add_argument('--model',type=str,default='simple',choices=['simple','NTUEE'],
+    parser.add_argument('--model',type=str,default='simple',choices=['simple','NTUEE','DNN'],
             metavar='<model>')
     parser.add_argument('--epoch',type=int,metavar='<#epoch>',default=20)
     parser.add_argument('--batch',type=int,metavar='<batch_size>',default=64)

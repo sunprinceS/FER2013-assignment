@@ -1,12 +1,17 @@
 from cnn import *
 from utils import *
+import os
 import numpy as np
 import argparse
 import time
 
-def train(batch_size, num_epoch, train_pixels, train_labels, val_pixels, val_labels):
-    model = build_model()
-    # model = load_model('model/model-1')
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
+def train(batch_size, num_epoch, pretrain, train_pixels, train_labels, val_pixels, val_labels, model_name=None):
+    if pretrain == False:
+        model = build_model()
+    else:
+        model = load_model(model_name)
 
     num_instances = len(train_labels)
     iter_per_epoch = (num_instances / batch_size) + 1
@@ -36,7 +41,7 @@ def train(batch_size, num_epoch, train_pixels, train_labels, val_pixels, val_lab
             model.train_on_batch(np.asarray(X_batch), np.asarray(Y_batch))
 
         loss_and_metrics = model.evaluate(val_pixels, val_labels, batch_size)
-        print ('loss & metrics:')
+        print ('\nloss & metrics:')
         print (loss_and_metrics)
 
         print ('Elapsed time in epoch ' + str(e+1) + ': ' + str(time.time() - start_t))
@@ -47,6 +52,7 @@ def main():
     parser = argparse.ArgumentParser(prog='main.py')
     parser.add_argument('--epoch', type=int, default=1)
     parser.add_argument('--batch', type=int, default=64)
+    parser.add_argument('--pretrain', type=bool, default=False)
     args = parser.parse_args()
 
     train_pixels = load_pickle('../fer2013/train_pixels.pkl')
@@ -62,9 +68,11 @@ def main():
         onehot[int(val_labels[i])] = 1.
         val_labels[i] = onehot
 
-    train(args.batch, args.epoch,
+    model_name = 'model/model-1'
+    train(args.batch, args.epoch, args.pretrain,
           train_pixels, train_labels,
-          np.asarray(val_pixels), np.asarray(val_labels))
+          np.asarray(val_pixels), np.asarray(val_labels),
+          model_name)
 
 if __name__=='__main__':
     main()

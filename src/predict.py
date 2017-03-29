@@ -24,8 +24,12 @@ def main():
     parser.add_argument('--epoch',type=int,metavar='<#epoch>',default=20)
     parser.add_argument('--batch',type=int,metavar='<batch_size>',default=64)
     parser.add_argument('--idx',type=int,metavar='<suffix>',required=True)
+    parser.add_argument('--partial',type=int,metavar='<partial_num>',default=28709)
     args = parser.parse_args()
-    store_path = "{}_epoch{}_{}".format(args.model,args.epoch,args.idx)
+    store_path = "{}_epoch{}".format(args.model,args.epoch)
+    if args.partial != 28709:
+        store_path += "_partial{}".format(str(args.partial))
+    store_path += '_{}'.format(args.idx)
     print(colored("Loading model from {}".format(store_path),'yellow',attrs=['bold']))
     model_path = os.path.join(exp_dir,store_path,'model.h5')
 

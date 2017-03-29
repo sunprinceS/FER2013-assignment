@@ -17,10 +17,13 @@ def main():
             metavar='<model>')
     parser.add_argument('--epoch',type=int,metavar='<#epoch>',default=20)
     parser.add_argument('--batch',type=int,metavar='<batch_size>',default=64)
+    parser.add_argument('--partial',type=int,metavar='<partial_num>',default=28709)
     args = parser.parse_args()
     
     dir_cnt = 0
     log_path = "{}_epoch{}".format(args.model,str(args.epoch))
+    if args.partial != 28709:
+        log_path += "_partial{}".format(str(args.partial))
     log_path += '_'
     store_path = os.path.join(exp_dir,log_path+str(dir_cnt))
     while dir_cnt < 150:
@@ -38,7 +41,7 @@ def main():
             # batch_size=args.batch,nb_epoch=args.epoch,validation_data=(dev_feats,dev_labels),
             # callbacks=[TensorBoard(log_dir=store_path,histogram_freq=1,write_graph=True)])
     history = model.History()
-    emotion_classifier.fit(x = tr_feats,y = tr_labels,
+    emotion_classifier.fit(x = tr_feats[:args.partial],y = tr_labels[:args.partial],
             batch_size=args.batch,nb_epoch=args.epoch,validation_data=(dev_feats,dev_labels),
             callbacks=[history])
     dump_history(store_path,history)

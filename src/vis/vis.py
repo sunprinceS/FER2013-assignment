@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from keras.models import load_model
 from keras import backend as K
 from termcolor import colored,cprint
-
+import numpy as np
 from utils import *
 
 base_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))

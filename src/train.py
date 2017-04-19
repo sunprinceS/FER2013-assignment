@@ -13,7 +13,7 @@ exp_dir = os.path.join(base_dir,'exp')
 def main():
     parser = argparse.ArgumentParser(prog='train.py',
             description='FER2013 training script.')
-    parser.add_argument('--model',type=str,default='simple',choices=['simple','NTUEE','DNN'],
+    parser.add_argument('--model',type=str,default='simple',choices=['simple','NTUEE','easy'],
             metavar='<model>')
     parser.add_argument('--epoch',type=int,metavar='<#epoch>',default=20)
     parser.add_argument('--batch',type=int,metavar='<batch_size>',default=64)
@@ -42,10 +42,6 @@ def main():
             batch_size=args.batch,nb_epoch=args.epoch,validation_data=(dev_feats,dev_labels),
             callbacks=[history])
     dump_history(store_path,history)
-    # print(history.tr_losses)
-    # print(history.tr_accs)
-    # print(history.val_losses)
-    # print(history.val_accs)
     emotion_classifier.save(os.path.join(store_path,'model.h5'))
 
 if __name__ == "__main__":

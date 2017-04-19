@@ -12,7 +12,7 @@ cmap_dir = os.path.join(img_dir,'cmap')
 combine_dir = os.path.join(img_dir,'combine')
 
 def main():
-    img_idx = [17]
+    img_idx = [51]
     for idx in img_idx:
         orig = cv2.imread(os.path.join(img_dir,'privateTest','{}.png'.format(idx)))
         cmap = cv2.imread(os.path.join(cmap_dir,'privateTest','{}.png'.format(idx)))

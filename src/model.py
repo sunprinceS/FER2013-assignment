@@ -30,6 +30,24 @@ def build_model(mode):
     
     print(colored("Use model {}".format(mode),'yellow',attrs=['bold']))
     model = Sequential()
+    if mode == 'easy':
+        # VGG-like convnet:
+        model.add(Convolution2D(8,1,1,border_mode='valid',input_shape=(48,48,1)))
+        model.add(Activation('relu'))
+        # model.add(Convolution2D(8,1,1))
+        # model.add(Activation('relu'))
+        model.add(MaxPooling2D(pool_size=(2, 2)))
+        model.add(Dropout(0.25))
+
+
+        model.add(Flatten())
+        # Note: Keras does automatic shape inference.
+        model.add(Dense(16))
+        model.add(Activation('relu'))
+        # model.add(Dropout(0.5))
+        model.add(Dense(nb_class))
+        model.add(Activation('softmax'))
+        opt =SGD(lr=0.01,decay=0.0)
     if mode == 'simple':
         # VGG-like convnet:
         model.add(Convolution2D(16,3,3,border_mode='valid',input_shape=(48,48,1)))
